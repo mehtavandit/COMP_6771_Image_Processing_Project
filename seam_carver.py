@@ -7,37 +7,134 @@ def rotate_image(image, rotate_angle):
     if rotate_angle:
         return np.rot90(image, -1) #clockwise (to be checked)
     else:
-        return np.rot90(image,1) #anti clockwise (to be checked)
-
+        return np.rot90(image,1) #anti-clockwise (to be checked)
 
 def resize(image, new_height, new_width):
+    """
+    Resize the image to new height and width using seam carving.
+    :param image: The input image to resize.
+    :param new_height: The target height.
+    :param new_width: The target width.
+    :return: The resized image.
+    """
     image = image.astype(np.float64)
 
-    height, width = image.shape[:2]
+    current_height, current_width = image.shape[:2]
 
-    if height + new_height <= 0 or width + new_width <=0 or abs(new_height) > height or abs(new_width) > width:
-        raise ValueError("Invalid seam dimensions: The image cannot be resized to zero or negative dimensions.")
+    if new_width < current_width:
+        # Remove seams to reduce width
+        num_seams_to_remove = current_width - new_width
+        image = seams_removal(image, num_seams_to_remove)
+
+    elif new_width > current_width:
+        # Insert seams to increase width
+        num_seams_to_add = new_width - current_width
+        image = seams_insertion(image, num_seams_to_add)
+
+    if new_height < current_height:
+        # Remove seams to reduce height (rotate the image to treat it as width)
+        image = rotate_image(image, True)  # Rotate clockwise to swap width and height
+        image = resize(image, new_width, new_height)  # Recursively call resize
+        image = rotate_image(image, False)  # Rotate back to the original orientation
+
+    elif new_height > current_height:
+        # Insert seams to increase height (rotate the image to treat it as width)
+        image = rotate_image(image, True)  # Rotate clockwise to swap width and height
+        image = resize(image, new_width, new_height)  # Recursively call resize
+        image = rotate_image(image, False)  # Rotate back to the original orientation
+
+    return np.uint8(np.clip(image, 0, 255))
 
 
-    result_image = image
 
-    if new_width > 0 :
-        result_image = insert_seam(result_image, new_width)
-    elif new_width < 0:
-        result_image = remove_seam(resized_image, -new_width)
+def remove_seam(image, seam_idx):
+    """
+    Remove a vertical seam from the image given the seam indices.
+    :param image: Input image
+    :param seam_idx: The indices of the seam pixels to be removed (list or array)
+    :return: The image after the seam has been removed
+    """
+    # The image dimensions
+    h, w = image.shape[:2]
+
+    # Create an empty array for the new image (1 less column)
+    new_image = np.zeros((h, w - 1, 3), dtype=np.uint8)
+
+    for row in range(h):
+        col = seam_idx[row]
+        # Copy all columns except the one where the seam is located
+        new_image[row, :, :] = np.delete(image[row, :, :], col, axis=0)
+
+    return new_image
 
 
-    if new_height > 0:
-        result_image = rotate_image(result_image, True)
-        result_image = insert_seam(result_image, new_height)
-        result_image = rotate_image(result_image, False)
+def insert_seam(image, seam_idx):
+    """
+    Insert a vertical seam into the image given the seam indices.
+    :param image: Input image
+    :param seam_idx: The indices of the seam pixels to be inserted (list or array)
+    :return: The image after the seam has been inserted
+    """
+    h, w = image.shape[:2]
 
-    elif new_height < 0:
-        result_image = rotate_image(result_image, True)
-        result_image = remove_seam(result_image, -new_height)
-        result_image = rotate_image(result_image, False)
+    # Create an empty array for the new image (1 more column)
+    new_image = np.zeros((h, w + 1, 3), dtype=np.uint8)
 
-    return result_image
+    for row in range(h):
+        col = seam_idx[row]
+
+        # Insert the pixel from the left and right of the seam
+        left_pixel = image[row, col - 1] if col > 0 else image[row, col]
+        right_pixel = image[row, col + 1] if col < w - 1 else image[row, col]
+
+        # Average the pixels to create a smooth seam insertion
+        new_pixel = (left_pixel + right_pixel) // 2
+
+        # Copy pixels to the new image, adding the averaged pixel at the seam location
+        new_image[row, :col, :] = image[row, :col, :]
+        new_image[row, col, :] = new_pixel
+        new_image[row, col + 1:, :] = image[row, col:, :]
+
+    return new_image
+
+
+def seams_removal(image, num_remove):
+    """
+    Remove seams from the image to reduce its size.
+    :param image: The input image.
+    :param num_remove: The number of seams to remove.
+    :return: The image after the seams are removed.
+    """
+    for _ in range(num_remove):
+        seam_idx, _ = get_minimum_seam(image)  # Get the seam to remove
+        image = remove_seam(image, seam_idx)  # Remove the seam
+    return image
+
+
+def seams_insertion(image, num_add):
+    """
+    Insert seams into the image to increase its size.
+    :param image: The input image.
+    :param num_add: The number of seams to add.
+    :return: The image after the seams are added.
+    """
+    for _ in range(num_add):
+        seam_idx, _ = get_minimum_seam(image)  # Get the seam to insert
+        image = insert_seam(image, seam_idx)  # Insert the seam
+    return image
+
+
+def get_minimum_seam(image):
+    """
+    Find the seam with the minimum energy in the image.
+    :param image: The input image.
+    :return: The indices of the minimum seam and the corresponding mask.
+    """
+    # Example: Here you would compute the seam indices (seam_idx) using your energy function
+    # For now, we can assume that the seam_idx is computed by your seam carving algorithm
+    # For simplicity, we're using a random seam as a placeholder
+    seam_idx = np.random.randint(0, image.shape[1], image.shape[0])  # Random indices for illustration
+    return seam_idx, None  # Returning None as the mask for simplicity
 
 
 if __name__ == '__main__':
@@ -61,6 +158,11 @@ if __name__ == '__main__':
         try:
             resized_image = resize(im, new_height, new_width)
             output_name = input("Enter the output file name: ")
+            resized_image_opencv = cv2.resize(im, (new_width, new_height))
+            cv2.imshow("OpenCV Resized Image", resized_image_opencv)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
             # cv2.imwrite(output_name, resized_image)
             print(f"Image resized and saved as {output_name}")
 
