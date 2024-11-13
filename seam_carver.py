@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from scipy import ndimage as ndi
 
+
 def rotate_image(image, rotate_angle):
     if rotate_angle:
         return np.rot90(image, -1) #clockwise (to be checked)
@@ -117,7 +118,7 @@ def seams_removal(image, num_remove):
     :return: The image after the seams are removed.
     """
     for _ in range(num_remove):
-        seam_idx, _ = get_minimum_seam(image)  # Get the seam to remove
+        seam_idx = get_minimum_seam(image)  # Get the seam to remove
         image = remove_seam(image, seam_idx)  # Remove the seam
     return image
 
@@ -130,7 +131,7 @@ def seams_insertion(image, num_add):
     :return: The image after the seams are added.
     """
     for _ in range(num_add):
-        seam_idx, _ = get_minimum_seam(image)  # Get the seam to insert
+        seam_idx = get_minimum_seam(image)  # Get the seam to insert
         image = insert_seam(image, seam_idx)  # Insert the seam
     return image
 
@@ -144,8 +145,37 @@ def get_minimum_seam(image):
     # Example: Here you would compute the seam indices (seam_idx) using your energy function
     # For now, we can assume that the seam_idx is computed by your seam carving algorithm
     # For simplicity, we're using a random seam as a placeholder
-    seam_idx = np.random.randint(0, image.shape[1], image.shape[0])  # Random indices for illustration
-    return seam_idx, None  # Returning None as the mask for simplicity
+    height, width = image.shape[:2]
+    image_energy = energy(image)
+
+    backtrack = np.zeros_like(image_energy, dtype = int)
+
+    for i in range(1, height):
+        for j in range(0,width):
+            if j == 0:
+                index = np.argmin(image_energy[i-1, j:j+2])
+                backtrack[i,j] = index + j
+                min_energy = image_energy[i-1, index+j]
+            else:
+                index = np.argmin(image_energy[i-1, j-1:j+2])
+                backtrack[i,j] = index + j - 1
+                min_energy = image_energy[i-1, index + j -1]
+
+            image_energy[i,j] += min_energy
+
+    seam = []
+    boolean_seam = np.ones((height, width), dtype=np.bool)
+    j = np.argmin(image_energy[-1])
+    for i in range(height-1, -1,-1):
+        boolean_seam[i,j] = False
+        seam.append(j)
+        j = backtrack[i,j]
+
+    seam.reverse()
+    return np.array(seam)
+
+
+
 
 
 if __name__ == '__main__':
@@ -174,7 +204,7 @@ if __name__ == '__main__':
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
-            # cv2.imwrite(output_name, resized_image)
+            cv2.imwrite(output_name, resized_image)
             print(f"Image resized and saved as {output_name}")
 
         except ValueError as e:
