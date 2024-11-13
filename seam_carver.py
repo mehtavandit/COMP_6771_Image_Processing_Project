@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-import argparse
 from scipy import ndimage as ndi
 
 def rotate_image(image, rotate_angle):
@@ -8,6 +7,18 @@ def rotate_image(image, rotate_angle):
         return np.rot90(image, -1) #clockwise (to be checked)
     else:
         return np.rot90(image,1) #anti-clockwise (to be checked)
+
+def energy(image):
+
+    kernel = np.array([1,0,-1])
+
+    x_gradient = ndi.convolve1d(image, kernel, axis=1, mode='wrap')
+    y_gradient = ndi.convolve1d(image, kernel, axis=0, mode='wrap')
+
+    gradient_magnitude = np.sqrt(np.square(x_gradient).sum(axis=2) + np.square(y_gradient).sum(axis=2))
+
+    return gradient_magnitude
+
 
 def resize(image, new_height, new_width):
     """
