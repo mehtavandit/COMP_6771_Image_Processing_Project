@@ -174,7 +174,7 @@ def get_minimum_seam(image):
     seam.reverse()
     return np.array(seam)
 
-def resize_and_save(image, new_width, new_height):
+def resize_and_save(image, new_width, new_height,im_path):
     """
     Function to resize the image to the specified dimensions and save it with a unique filename.
     :param image: The original image to resize.
@@ -185,13 +185,17 @@ def resize_and_save(image, new_width, new_height):
         # Perform resizing
         resized_image = resize(image, new_height, new_width)
 
-        # Generate filename based on dimensions
-        output_name = f"resized_{new_width}x{new_height}.jpg"
+        length_to_name = len(im_path) - 4
+        image_name = im_path[0:length_to_name]
 
         # Display and save the resized image
-        cv2.imshow(f"Resized Image - {new_width}x{new_height}", resized_image)
+        display_image = cv2.resize(im, (new_width, new_height))
+        cv2.imshow(f"Resized Image - {new_width}x{new_height}", display_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+        # Generate filename based on dimensions
+        output_name = f"{image_name}_{new_width}x{new_height}.jpg"
 
         cv2.imwrite(output_name, resized_image)
         print(f"Image resized to {new_width}x{new_height} and saved as {output_name}")
@@ -204,10 +208,10 @@ if __name__ == '__main__':
     print("Select an option:")
     print("1. Resize image")
     print("2. Multiple size images")
-    option = input("Enter 1 for resize or 2 for multiple size images: ")
+    option = input("Enter 1 for resize or 2 for multi-size images: ")
 
     # Ask for image name and load it
-    im_path = input("Enter the path to the image: ")
+    im_path = input("Enter the file name ")
     im = cv2.imread(im_path)
     if im is None:
         print("Error: Image not found!")
@@ -217,7 +221,7 @@ if __name__ == '__main__':
         # Single set of dimensions
         new_width = int(input("Enter the new width: "))
         new_height = int(input("Enter the new height: "))
-        resize_and_save(im, new_width, new_height)
+        resize_and_save(im, new_width, new_height,im_path)
 
     elif option == "2":  # Multiple Resizes
         # Loop for multiple sizes
@@ -230,32 +234,7 @@ if __name__ == '__main__':
                 print("Exiting multiple resize mode.")
                 break
 
-            resize_and_save(im, new_width, new_height)
+            resize_and_save(im, new_width, new_height, im_path)
 
     else:
         print("Invalid option! Please enter 1 or 2.")
-
-# elif option == "2":  # Object removal
-    #     # Ask for image and mask paths
-    #     im_path = input("Enter the path to the image: ")
-    #     mask_path = input("Enter the path to the protective mask (optional, press Enter to skip): ")
-    #     rmask_path = input("Enter the path to the removal mask: ")
-    #
-    #     # Load the image and masks
-    #     im = cv2.imread(im_path)
-    #     if im is None:
-    #         print("Error: Image not found!")
-    #         exit()
-    #
-    #     mask = cv2.imread(mask_path, 0) if mask_path else None
-    #     rmask = cv2.imread(rmask_path, 0)
-    #
-    #     # Ask for visualization and horizontal seam removal options
-    #     visualize = input("Do you want to visualize the seam removal process? (y/n): ").lower() == 'y'
-    #     hremove = input("Remove horizontal seams for object removal? (y/n): ").lower() == 'y'
-    #
-    #     # Perform object removal
-    #     output_name = input("Enter the output file name: ")
-    #     # output = object_removal(im, rmask, mask, visualize, hremove)
-    #     # cv2.imwrite(output_name, output)
-    #     print(f"Object removal complete and saved as {output_name}")
