@@ -4,13 +4,25 @@ from scipy import ndimage as ndi
 
 
 def rotate_image(image, rotate_angle):
+    """
+    Rotates the input image by 90 degrees either clockwise or anti-clockwise based on the given angle.
+     :param rotate_angle: If True, rotates the image clockwise by 90 degrees. If False, rotates it anti-clockwise
+      by 90 degrees.
+     :param image: The input image to be rotated.
+     :return numpy.ndarray: The rotated image.
+    """
     if rotate_angle:
-        return np.rot90(image, -1) #clockwise (to be checked)
+        return np.rot90(image, -1) #clockwise
     else:
-        return np.rot90(image,1) #anti-clockwise (to be checked)
+        return np.rot90(image,1) #anti-clockwise
 
 def energy(image):
-
+    """
+    Computes the energy of an image using the gradient magnitudes in both the x and y directions.
+     :param image: The input image for which the energy will be calculated.
+     :return numpy.ndarray: A 2D array representing the energy of the image, where each value corresponds to the
+      energy at that pixel.
+    """
     kernel = np.array([1,0,-1])
 
     x_gradient = ndi.convolve1d(image, kernel, axis=1, mode='wrap')
@@ -128,13 +140,12 @@ def seams_insertion(image, num_add):
 
 def get_minimum_seam(image):
     """
-    Find the seam with the minimum energy in the image.
-    :param image: The input image.
-    :return: The indices of the minimum seam and the corresponding mask.
+    Finds the vertical seam with the minimum energy in the image using dynamic programming.
+    A seam is a connected path of pixels from top to bottom in an image, and the minimum energy seam
+    is the one that minimizes the sum of pixel energy along the path. This function computes the seam
+    by calculating the energy of each pixel and using dynamic programming to backtrack the path of least energy.
+     :param image: Input image.
     """
-    # Example: Here you would compute the seam indices (seam_idx) using your energy function
-    # For now, we can assume that the seam_idx is computed by your seam carving algorithm
-    # For simplicity, we're using a random seam as a placeholder
     height, width = image.shape[:2]
     image_energy = energy(image)
 
@@ -164,9 +175,10 @@ def get_minimum_seam(image):
     seam.reverse()
     return np.array(seam)
 
-def resize_and_save(image, new_width, new_height,im_path):
+def resize_and_save(image, new_width, new_height, im_path):
     """
     Function to resize the image to the specified dimensions and save it with a unique filename.
+    :param im_path: Input image path
     :param image: The original image to resize.
     :param new_width: The target width.
     :param new_height: The target height.
@@ -179,8 +191,7 @@ def resize_and_save(image, new_width, new_height,im_path):
         image_name = im_path[0:length_to_name]
 
         # Display and save the resized image
-        display_image = cv2.resize(im, (new_width, new_height))
-        cv2.imshow(f"Resized Image - {new_width}x{new_height}", display_image)
+        cv2.imshow(f"Resized Image - {new_width}x{new_height}", resized_image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
