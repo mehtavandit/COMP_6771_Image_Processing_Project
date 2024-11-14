@@ -30,34 +30,24 @@ def resize(image, new_height, new_width):
     :return: The resized image.
     """
     image = image.astype(np.float64)
-
     current_height, current_width = image.shape[:2]
 
-    if new_width < current_width:
-        # Remove seams to reduce width
-        num_seams_to_remove = current_width - new_width
-        image = seams_removal(image, num_seams_to_remove)
+    # Function to handle both width and height resizing
+    def adjust_size(image, dimension, current_dimension, seam_fn, rotate=False):
+        if dimension != current_dimension:
+            num_seams = abs(current_dimension - dimension)
+            if rotate:  # Rotate image for height adjustment
+                image = rotate_image(image, True)
+            image = seam_fn(image, num_seams)
+            if rotate:  # Rotate back after height adjustment
+                image = rotate_image(image, False)
+        return image
 
-    elif new_width > current_width:
-        # Insert seams to increase width
-        num_seams_to_add = new_width - current_width
-        image = seams_insertion(image, num_seams_to_add)
-
-    if new_height < current_height:
-        # Remove seams to reduce height (rotate the image to treat it as width)
-        image = rotate_image(image, True)  # Rotate clockwise to swap width and height
-        image = resize(image, new_width, new_height)  # Recursively call resize
-        image = rotate_image(image, False)  # Rotate back to the original orientation
-
-    elif new_height > current_height:
-        # Insert seams to increase height (rotate the image to treat it as width)
-        image = rotate_image(image, True)  # Rotate clockwise to swap width and height
-        image = resize(image, new_width, new_height)  # Recursively call resize
-        image = rotate_image(image, False)  # Rotate back to the original orientation
+    # Adjust width and height using seam carving
+    image = adjust_size(image, new_width, current_width, seams_removal if new_width < current_width else seams_insertion)
+    image = adjust_size(image, new_height, current_height, seams_removal if new_height < current_height else seams_insertion, rotate=True)
 
     return np.uint8(np.clip(image, 0, 255))
-
-
 
 def remove_seam(image, seam_idx):
     """
@@ -70,7 +60,7 @@ def remove_seam(image, seam_idx):
     h, w = image.shape[:2]
 
     # Create an empty array for the new image (1 less column)
-    new_image = np.zeros((h, w - 1, 3), dtype=np.uint8)
+    new_image = np.zeros((h, w - 1, 3), dtype=np.float64)
 
     for row in range(h):
         col = seam_idx[row]
@@ -90,7 +80,7 @@ def insert_seam(image, seam_idx):
     h, w = image.shape[:2]
 
     # Create an empty array for the new image (1 more column)
-    new_image = np.zeros((h, w + 1, 3), dtype=np.uint8)
+    new_image = np.zeros((h, w + 1, 3), dtype=np.float64)
 
     for row in range(h):
         col = seam_idx[row]
