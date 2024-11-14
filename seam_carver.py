@@ -195,13 +195,15 @@ def resize_and_save(image, new_width, new_height,im_path):
 
 
 if __name__ == '__main__':
+
+    # Ask for image name and load it
+    im_path = input("Enter the file name: ")
+
     print("Select an option:")
     print("1. Resize image")
     print("2. Multiple size images")
     option = input("Enter 1 for resize or 2 for multi-size images: ")
 
-    # Ask for image name and load it
-    im_path = input("Enter the file name ")
     im = cv2.imread(im_path)
     if im is None:
         print("Error: Image not found!")
@@ -220,7 +222,7 @@ if __name__ == '__main__':
             new_width = int(input("Enter the new width (or -1 to exit): "))
             new_height = int(input("Enter the new height (or -1 to exit): "))
 
-            if new_width == -1 or new_height == -1:
+            if new_width == -1:
                 print("Exiting multiple resize mode.")
                 break
 
