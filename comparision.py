@@ -17,10 +17,10 @@ def compute_energy(image):
 
 
 # Load your seam-carved image (replace 'your_seam_carved_image.jpg' with your actual image path)
-your_seam_carved_image = cv2.imread('test1_1000x1000.jpg')
+your_seam_carved_image = cv2.imread('test1_900x700.jpg')
 
 # Load the benchmark seam-carved image (replace 'benchmark_seam_carved_image.jpg' with the actual benchmark path)
-benchmark_seam_carved_image = cv2.imread('test1_1000x1000_benchmark.jpg')
+benchmark_seam_carved_image = cv2.imread('test1_900x700_benchmark.jpg')
 
 # Compute the energy maps for both images
 energy_your_algorithm = compute_energy(your_seam_carved_image)
@@ -37,6 +37,10 @@ energy_benchmark = np.uint8(energy_benchmark)
 # Show the energy maps
 cv2.imshow("Energy (Your Algorithm)", energy_your_algorithm)
 cv2.imshow("Energy (Benchmark Algorithm)", energy_benchmark)
+
+# Save both energy maps to disk
+cv2.imwrite('energy_your_algorithm.png', energy_your_algorithm)
+cv2.imwrite('energy_benchmark.png', energy_benchmark)
 
 # Wait for any key press and close the windows
 cv2.waitKey(0)
