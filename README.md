@@ -86,3 +86,25 @@ python seam_carving.py
 - **`rotate_image(image, rotate_angle)`**:  
   Rotates the image 90 degrees clockwise or anti-clockwise.
 
+## Example Usage
+
+### Resize Image to Specific Dimensions
+
+1. Run the program:
+   ```bash
+   python seam_carving.py
+   ```
+2. Enter the image name:
+   ```bash
+   Enter the file name: example.jpg
+   ```
+3. Choose option 1 for single resizing:
+   ```bash
+   Enter 1 for resize or 2 for multi-size images: 1
+   ```
+4. Enter target dimensions:
+   ```bash
+   Enter the new width: 300
+   Enter the new height: 200
+   ```
+5. The resized image will be saved as example_300x200.jpg.
