@@ -47,7 +47,7 @@ python seam_carving.py
 - Resized images are saved in the current working directory with a filename format: `original_name_<width>x<height>.jpg`.
 - Resized images are also displayed for preview.
 
-- ## Functions Overview
+## Functions Overview
 
 ### Main Functions
 
@@ -57,7 +57,7 @@ python seam_carving.py
 - **`resize(image, new_height, new_width)`**:  
   Resizes the image using seam carving for width and height adjustments.
 
----
+
 
 ### Seam Carving Functions
 
@@ -79,7 +79,7 @@ python seam_carving.py
 - **`seams_insertion(image, num_add)`**:  
   Inserts multiple seams to increase the image width.
 
----
+
 
 ### Utility Functions
 
