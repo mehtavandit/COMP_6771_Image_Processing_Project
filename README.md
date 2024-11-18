@@ -156,7 +156,7 @@ python seam_carving.py
 
 3. Resized castle.jpg (1600x800)
 
-   ![Resized Image](Test1/Multi-Size/castle_1600x800.jpg)
+   ![Resized Image](Multi-Size/castle_1600x800.jpg)
 
 4. Resized castle.jpg (1600x1600)
 
