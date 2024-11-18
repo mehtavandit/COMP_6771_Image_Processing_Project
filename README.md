@@ -127,6 +127,8 @@ python seam_carving.py
 
 ## Results
 
+### Resize Image to Specific Dimensions
+
 1. Original test1.jpg Image (800x600)
    
    ![Original Image](Test1/test1.jpg)
@@ -138,5 +140,29 @@ python seam_carving.py
 3. Scaled down test1.jpg with dimensions (700x500)
 
     ![Resized Image](Test%202/test2_700x500.jpg)
+
+
    
+### Resize Multiple Images
+
+
+1. Original castle.jpg Image (1428x968)
+
+   ![Original Image](Multi-Size/castle.jpg)
+
+2. Resized castle.jpg (800x800)
+
+   ![Resized Image](Multi-Size/castle_800x800.jpg)
+
+3. Resized castle.jpg (1600x800)
+
+   ![Resized Image](Test1/Multi-Size/castle_1600x800.jpg)
+
+4. Resized castle.jpg (1600x1600)
+
+   ![Resized Image](Multi-Size/castle_1600x1600.jpg)
+
+5. Resized castle.jpg (1000x1000)
+
+   ![Resized Image](Multi-Size/castle_1000x1000.jpg)
 
