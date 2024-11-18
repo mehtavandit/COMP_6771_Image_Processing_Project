@@ -125,3 +125,11 @@ python seam_carving.py
    Enter the new width (or -1 to exit): -1
    ```
 
+## Results
+
+### Test1 (Scaling Up)
+
+1. Original test1.jpg Image (800x600)
+   https://github.com/mehtavandit/COMP_6771_Image_Processing_Project/blob/main/Test1/test1.jpg
+3. Resized test1.jpg with dimension (900x700)
+
