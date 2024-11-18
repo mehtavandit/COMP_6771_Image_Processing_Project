@@ -108,3 +108,20 @@ python seam_carving.py
    Enter the new height: 200
    ```
 5. The resized image will be saved as example_300x200.jpg.
+
+### Resize Multiple Images
+
+1. Choose option 2 for batch resizing:
+   ```bash
+   Enter 1 for resize or 2 for multi-size images: 2
+   ```
+2. Provide dimensions iteratively:
+   ```bash
+   Enter the new width (or -1 to exit): 400
+   Enter the new height (or -1 to exit): 300
+   ```
+3. Exit by entering -1 for width:
+   ```bash
+   Enter the new width (or -1 to exit): -1
+   ```
+
