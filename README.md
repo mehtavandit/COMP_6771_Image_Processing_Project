@@ -127,14 +127,16 @@ python seam_carving.py
 
 ## Results
 
-### Test1 (Scaling Up)
-
 1. Original test1.jpg Image (800x600)
    
    ![Original Image](Test1/test1.jpg)
    
-2. Resized test1.jpg with dimension (900x700)
+2. Scaled up test1.jpg with dimension (900x700)
 
    ![Resized Image](Test1/test1_900x700.jpg)
+
+3. Scaled down test1.jpg with dimensions (700x500)
+
+    ![Resized Image](Test%202/test2_700x500.jpg)
    
 
