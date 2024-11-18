@@ -46,3 +46,43 @@ python seam_carving.py
 
 - Resized images are saved in the current working directory with a filename format: `original_name_<width>x<height>.jpg`.
 - Resized images are also displayed for preview.
+
+- ## Functions Overview
+
+### Main Functions
+
+- **`resize_and_save(image, new_width, new_height, im_path)`**:  
+  Resizes the image to the target dimensions and saves the result.
+
+- **`resize(image, new_height, new_width)`**:  
+  Resizes the image using seam carving for width and height adjustments.
+
+---
+
+### Seam Carving Functions
+
+- **`energy(image)`**:  
+  Computes the energy map of the image based on gradients.
+
+- **`get_minimum_seam(image)`**:  
+  Finds the vertical seam with the lowest energy using dynamic programming.
+
+- **`remove_seam(image, seam_idx)`**:  
+  Removes a vertical seam from the image.
+
+- **`insert_seam(image, seam_idx)`**:  
+  Inserts a vertical seam into the image.
+
+- **`seams_removal(image, num_remove)`**:  
+  Removes multiple seams to reduce the image width.
+
+- **`seams_insertion(image, num_add)`**:  
+  Inserts multiple seams to increase the image width.
+
+---
+
+### Utility Functions
+
+- **`rotate_image(image, rotate_angle)`**:  
+  Rotates the image 90 degrees clockwise or anti-clockwise.
+
