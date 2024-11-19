@@ -177,4 +177,4 @@ python seam_carving.py
 
 | **Lecturer**            | **Email**                  |
 |-------------------------|----------------------------|
-| Dr. Mahdi S. Hosseini   | mahdi.hosseini@concordia.ca |
+| Dr Yiming Xiao  | yiming.xiao@concordia.ca |
