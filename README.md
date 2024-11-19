@@ -166,3 +166,15 @@ python seam_carving.py
 
    ![Resized Image](Multi-Size/castle_1000x1000.jpg)
 
+
+## Contributors
+
+| **Team Members**        | **Student ID** | **Email**                  |
+|-------------------------|----------------|----------------------------|
+| Vandit Mehta            | 40232414       | mehtavandit2205@gmail.com |
+| Devshree Shah             | 40269569       | shahdevshree07@gmail.com  |
+
+
+| **Lecturer**            | **Email**                  |
+|-------------------------|----------------------------|
+| Dr. Mahdi S. Hosseini   | mahdi.hosseini@concordia.ca |
